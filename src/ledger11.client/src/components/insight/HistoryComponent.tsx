@@ -4,6 +4,7 @@ import { useBookStore } from "@/lib/store-book";
 import { type Category } from "@/lib/types";
 import BarChartComponent from "@/components/insight/BarChartComponent";
 import HorizontalBarChartComponent from "./HorizontalBarChartComponent";
+import RevolutChartComponent from "./RevoluteChartComponent";
 // import { formatCurrency } from "@/lib/utils";
 
 export interface HistoryRecord {
@@ -63,30 +64,30 @@ export default function HistoryComponent() {
       {dayly && (
         <div className="m-4">
           <ChartTitle title="Last 7 days" />
-          <BarChartComponent
+          <RevolutChartComponent
             data={cleanValues(dayly.slice(-7))}
             title="Daily"
-            categories={colors}
+            // categories={colors}
           />
         </div>
       )}
       {weekly && (
         <div className="m-4">
           <ChartTitle title="Last 7 weeks" />
-          <HorizontalBarChartComponent
+          <RevolutChartComponent
             data={cleanValues(weekly.slice(-7).reverse())}
             title="Weekly"
-            categories={colors}
+            // categories={colors}
           />
         </div>
       )}
       {monthly && (
         <div className="m-4">
           <ChartTitle title="Last 12 months" />
-          <HorizontalBarChartComponent
+          <RevolutChartComponent
             data={cleanValues(monthly.slice(-12).reverse())}
             title="Monthly"
-            categories={colors}
+            // categories={colors}
           />
         </div>
       )}

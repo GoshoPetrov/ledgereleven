@@ -78,6 +78,7 @@ public static class GenerateCommands
 
     private static async Task Generate(LedgerDbContext db, int count)
     {
+        count = 1;
         using var tran = db.Database.BeginTransaction();
 
         var categories = db.Categories.ToArray();
@@ -93,42 +94,21 @@ public static class GenerateCommands
             var date = startDate.AddDays(rand.Next((int)(now - startDate).TotalDays));
             var totalValue = Math.Round(rand.NextDouble() * 150 + 5, 2);
 
-            var transaction = new Transaction
+            for (int month = 1; month < 10; month++)
             {
-                Date = date,
-                Value = (decimal)totalValue,
-                Category = cat,
-                User = rand.NextDouble() > 0.5 ? "alice@example.com" : "bob@example.com",
-                TransactionDetails = new List<TransactionDetail>()
-            };
-
-            // Add 1–4 details, optionally
-            var detailCount = rand.Next(1, 5);
-            double remaining = totalValue;
-
-            for (int j = 0; j < detailCount; j++)
-            {
-                double value;
-                if (j == detailCount - 1)
-                    value = remaining;
-                else
+                var transaction = new Transaction
                 {
-                    value = Math.Round(rand.NextDouble() * (remaining / 2), 2);
-                    remaining -= value;
-                }
-
-                var detail = new TransactionDetail
-                {
-                    Value = (decimal)value,
-                    Category = categories[rand.Next(categories.Length)],
-                    Description = $"Auto {cat.Name} detail",
-                    Quantity = rand.NextDouble() < 0.5 ? rand.Next(1, 5) : null
+                    Date = new DateTime(2026, (1004-month) % 12 + 1, 10),
+                    Value = 10,
+                    Category = cat,
+                    User = rand.NextDouble() > 0.5 ? "alice@example.com" : "bob@example.com",
+                    TransactionDetails = new List<TransactionDetail>()
                 };
 
-                transaction.TransactionDetails.Add(detail);
+                db.Transactions.Add(transaction);
+
             }
 
-            db.Transactions.Add(transaction);
         }
 
         await db.SaveChangesAsync();
