@@ -21,6 +21,17 @@ export default function RevolutChartComponent({ data, title }: Props) {
   const latestValue = data[data.length - 1]?.value ?? 0;
   const maxValue = Math.max(...data.map((d) => d.value), 0);
 
+  debugger;
+  const chartData:{label:string; value: number}[] = [];
+  data.forEach(d => {
+    let sum = 0;
+    Object.values(d.value).forEach((x) => sum += x);
+    chartData.push({
+      label: d.label,
+      value: sum
+    })
+  })
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -40,7 +51,7 @@ export default function RevolutChartComponent({ data, title }: Props) {
       {/* Chart */}
       <div className="h-40">  
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data}>
+          <AreaChart data={chartData}>
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#34d399" stopOpacity={0.4} />
